@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 
     The contents of this file are subject to the license and copyright
     detailed in the LICENSE and NOTICE files at the root of the source
@@ -139,6 +139,18 @@
             <xsl:attribute name="placeholder"><xsl:value-of select="$placeholder"/></xsl:attribute>
             <xsl:attribute name="i18n:attr">placeholder</xsl:attribute>
         </xsl:if>
+      <!-- Lan 04.04.2015 : copy angular directive -->
+       <xsl:for-each select="@*">
+            <xsl:variable name="attrname">
+                <xsl:value-of select="name(.)"/>
+            </xsl:variable>
+            <xsl:if test="starts-with(name(.),'ng')">
+                <xsl:attribute name="{name(.)}">
+                    <xsl:value-of select="."/>
+                </xsl:attribute>
+            </xsl:if>
+       </xsl:for-each>
+        
     </xsl:template>
 
 

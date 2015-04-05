@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 
     The contents of this file are subject to the license and copyright
     detailed in the LICENSE and NOTICE files at the root of the source
@@ -673,7 +673,14 @@
             <xsl:when test="@type='button'">
                 <button>
                     <xsl:call-template name="fieldAttributes"/>
-                    <xsl:attribute name="type">submit</xsl:attribute>
+                    <xsl:choose>
+                      <xsl:when test="@notaSubmitButton">
+                         <xsl:attribute name="type">button</xsl:attribute>
+                      </xsl:when>
+                      <xsl:otherwise>
+                          <xsl:attribute name="type">submit</xsl:attribute>                 
+                      </xsl:otherwise>
+                    </xsl:choose>
                     <xsl:choose>
                         <xsl:when test="dri:value/i18n:text">
                             <xsl:apply-templates select="dri:value/*"/>

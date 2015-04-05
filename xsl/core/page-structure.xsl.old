@@ -337,7 +337,9 @@
                         </button>
 
                         <a href="{$context-path}/" class="navbar-brand">
-                            <img src="{$theme-path}/images/DSpace-logo-line.svg" />
+                            <!-- Lan 30.03.2015 : remove / -->
+                            <!--img src="{$theme-path}/images/DSpace-logo-line.svg" /-->
+                            <img src="{$theme-path}images/DSpace-logo-line.svg" />
                         </a>
 
 
@@ -681,7 +683,9 @@
         </xsl:variable>
         <img class="img-responsive">
              <xsl:attribute name="src">
-                <xsl:value-of select="concat($theme-path,'/images/creativecommons/', $ccLogo)"/>
+                <!-- Lan 30.03.2015 = remove / -->
+                <!--xsl:value-of select="concat($theme-path,'/images/creativecommons/', $ccLogo)"/-->
+                <xsl:value-of select="concat($theme-path,'images/creativecommons/', $ccLogo)"/>
              </xsl:attribute>
              <xsl:attribute name="alt">
                  <xsl:value-of select="$ccLicenseName"/>
@@ -723,7 +727,9 @@
                             <span class="theme-by">Theme by&#160;</span>
                             <br/>
                             <a title="@mire NV" target="_blank" href="http://atmire.com">
-                                <img alt="@mire NV" src="{concat($theme-path, '/images/@mirelogo-small.png')}"/>
+                                <!-- Lan 30.03.2015 : remove / -->
+                                <!--img alt="@mire NV" src="{concat($theme-path, '/images/@mirelogo-small.png')}"/-->
+                                <img alt="@mire NV" src="{concat($theme-path, 'images/@mirelogo-small.png')}"/>
                             </a>
                         </div>
 
@@ -813,6 +819,7 @@
             <xsl:text>scripts-dist.xml</xsl:text>
         </xsl:variable>
         <xsl:for-each select="document($scriptURL)/scripts/script">
+<!--script>var me='<xsl:value-of select="@src"/>';</script-->        
             <script src="{$theme-path}{@src}">&#160;</script>
         </xsl:for-each>
 

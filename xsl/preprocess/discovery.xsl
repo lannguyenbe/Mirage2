@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     The contents of this file are subject to the license and copyright
@@ -31,6 +31,17 @@
                 exclude-result-prefixes="xsl dri i18n">
 
     <xsl:output indent="yes"/>
+  
+    <!-- Lan 04.04.2015 add angular controller for search box -->
+    <xsl:template match="dri:div[@id='aspect.discovery.SimpleSearch.div.discovery-search-box']">
+        <div>
+            <xsl:call-template name="copy-attributes"/>
+            <xsl:attribute name="ng-controller">
+               <xsl:text>SearchBoxController</xsl:text>
+            </xsl:attribute>                           
+             <xsl:apply-templates/>
+        </div>
+    </xsl:template>    
 
     <xsl:template match="dri:list[@id='aspect.discovery.SimpleSearch.list.primary-search']">
         <list>
@@ -46,13 +57,13 @@
     <xsl:template match="dri:row[@id='aspect.discovery.SimpleSearch.row.filter-controls']/dri:cell">
         <cell>
             <xsl:call-template name="copy-attributes"/>
-            <field id="aspect.discovery.SimpleSearch.field.submit_reset_filter" rend="discovery-reset-filter-button" n="submit_reset_filter" type="button">
+            <field id="aspect.discovery.SimpleSearch.field.submit_reset_filter" rend="discovery-reset-filter-button" n="submit_reset_filter" type="button" notaSubmitButton="true" ng-click="restoreOriginalFilters()">
                 <params/>
                 <value type="raw">
                     <i18n:text>xmlui.mirage2.discovery.reset</i18n:text>
                 </value>
             </field>
-            <field rend="discovery-add-filter-button visible-xs " n="submit_add_filter" type="button">
+            <field rend="discovery-add-filter-button visible-xs " n="submit_add_filter" type="button" notaSubmitButton="true" ng-click="addFilter()">
                 <params/>
                 <value type="raw">
                     <i18n:text>xmlui.mirage2.discovery.newFilter</i18n:text>

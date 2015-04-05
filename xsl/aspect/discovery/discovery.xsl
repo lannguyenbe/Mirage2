@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 
     The contents of this file are subject to the license and copyright
     detailed in the LICENSE and NOTICE files at the root of the source
@@ -343,7 +343,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-offset-3 col-sm-9" id="filters-overview-wrapper-squared"/>
+            <div class="col-sm-offset-3 col-sm-9" id="filters-overview-wrapper-squared">
+            <div id="filters-overview-wrapper" ng-include="'template/handlebars/hbs_simple_filters.html'"/>
+            </div>
         </div>
     </xsl:template>
 
@@ -445,6 +447,7 @@
                 </xsl:for-each>
             </xsl:for-each>
         </script>
+        <div id="new-filters-wrapper" ng-include="'template/handlebars/hbs_advanced_filters.html'"></div>
     </xsl:template>
 
     <xsl:template match="dri:row[@id='aspect.discovery.SimpleSearch.row.filter-controls']">
