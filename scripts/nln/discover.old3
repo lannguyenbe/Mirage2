@@ -1,6 +1,4 @@
 var app = angular.module('discoverApp', ['ngResource','nln.ui','nln.ui.utils'
-   ,'template/handlebars/primary_query.html'
-   ,'template/handlebars/hidden_primary_query.html'
    ,'template/handlebars/hbs_advanced_filters.html'
    ,'template/handlebars/hbs_simple_filters.html'
    ,'template/handlebars/hidden_advanced_filters.html']);
@@ -28,20 +26,6 @@ app.factory('Series', ['$rootScope', '$resource', function($rootScope, $resource
 app.controller('SearchBoxController', ['$scope', '$rootScope', '$window', 'focus', 'Authors', 'Series',
 function($scope, $rootScope, $window, focus, Authors, Series) {
 
-
-   /* Primary search */
-    $scope.primaryQuery = $window.DSpace.discovery.query;
-    if (typeof $window.DSpace.discovery !== 'undefined') {
-      if ($scope.primaryQuery.length == 0) {
-         $scope.primaryQuery.push({
-            scope: '',
-            query: ''
-         });
-      }
-    }
-    $scope.scopeList = $window.DSpace.i18n.discovery.scope;
-
-   /* Filter */
     $scope.filters = $window.DSpace.discovery.filters;
     backupOriginalFilters();
     if (typeof $window.DSpace.discovery !== 'undefined') { // start index at 1
@@ -96,6 +80,11 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
     }
 
 
+    $scope.onSubmit = function(ev) {
+console.log('onSubmit'+ev); // TODO
+    }
+
+
     $scope.notempty = function(val, idx) {
         return (val.query ? true : false);
     }
@@ -124,32 +113,16 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
 
 }]);
 
-angular.module('template/handlebars/hidden_primary_query.html',[])
+
+
+angular.module('template/handlebars/primary_search.html', [])
 .run(['$templateCache', function ($templateCache) {
-   $templateCache.put('template/handlebars/hidden_primary_query.html',
-       '<p class="ds-paragraph">'
-      +'    <input id="aspect_discovery_SimpleSearch_field_query" class="ds-hidden-field form-control" type="hidden" name="query" value="{{primaryQuery[0].query}}">'
-      +'    <input id="aspect_discovery_SimpleSearch_field_scope" class="ds-hidden-field form-control" type="hidden" name="scope" value="{{primaryQuery[0].scope}}">'
-      +'</p>'
+   $templateCache.put('template/handlebars/primary_search.html',
+
       +'');
 }]);
 
-angular.module('template/handlebars/primary_query.html', [])
-.run(['$templateCache', function ($templateCache) {
-   $templateCache.put('template/handlebars/primary_query.html',
-       '<div class="col-sm-3">'
-      +' <p>'
-      +'    <select id="aspect_discovery_SimpleSearch_field_scope" class="ds-select-field form-control" name="scope" ng-model="primaryQuery[0].scope" ng-init="primaryQuery[0].scope = primaryQuery[0].scope||scopeList[0].id" ng-options="sco.id as sco.label for sco in scopeList">'
-      +'    </select>'
-      +'</p>'
-      +'</div>'
-      +'<div class="col-sm-9">'
-      +' <p class="input-group">'
-      +'    <input id="aspect_discovery_SimpleSearch_field_query" class="ds-text-field form-control" name="query" type="text" ng-model="primaryQuery[0].query"><span class="input-group-btn"><button id="aspect_discovery_SimpleSearch_field_submit" class="ds-button-field btn btn-default search-icon search-icon" name="submit" type="submit">Go</button></span>'
-      +'</p>'
-      +'</div>'
-      +'');
-}]);
+
 
 angular.module('template/handlebars/hidden_advanced_filters.html',[])
 .run(['$templateCache', function ($templateCache) {
@@ -177,7 +150,7 @@ angular.module('template/handlebars/hbs_advanced_filters.html', [])
       +'    <div class="col-xs-4 col-sm-2">'
       +'        <p>'
       +'            <select id="aspect_discovery_SimpleSearch_field_filtertype_{{$index}}" class="ds-select-field form-control"'
-      +'                    name="filtertype_{{$index}}" ng-model="fil.type" ng-init="fil.type = fil.type||filterTypesKeys[0]">'
+      +'                    name="filtertype_{{$index}}" ng-model="fil.type" ng-init="fil.type = filterTypesKeys[0]">'
       +'                <option ng-repeat="ft in filterTypes" value="{{filterTypesKeys[$index]}}" ng-selected="fil.type==filterTypesKeys[$index]">{{filterTypes[filterTypesKeys[$index]]}}</option>'
       +'            </select>'
       +'        </p>'
@@ -185,7 +158,7 @@ angular.module('template/handlebars/hbs_advanced_filters.html', [])
       +'    <div class="col-xs-4 col-sm-2">'
       +'        <p>'
       +'            <select id="aspect_discovery_SimpleSearch_field_filter_relational_operator_{{$index}}"'
-      +'                    class="ds-select-field form-control" name="filter_relational_operator_{{$index}}" ng-model="fil.relational_operator" ng-init="fil.relational_operator = fil.relational_operator||relOperatorsKeys[0]">'
+      +'                    class="ds-select-field form-control" name="filter_relational_operator_{{$index}}" ng-model="fil.relational_operator" ng-init="fil.relational_operator = relOperatorsKeys[0]">'
       +'                <option ng-repeat="op in relOperators" value="{{relOperatorsKeys[$index]}}" ng-selected="fil.relational_operator==relOperatorsKeys[$index]">{{relOperators[relOperatorsKeys[$index]]}}</option>'
       +'            </select>'
       +'        </p>'
