@@ -134,12 +134,14 @@ angular.module('template/handlebars/hidden_primary_query.html',[])
       +'');
 }]);
 
+
 angular.module('template/handlebars/primary_query.html', [])
 .run(['$templateCache', function ($templateCache) {
    $templateCache.put('template/handlebars/primary_query.html',
        '<div class="col-sm-3">'
       +' <p>'
-      +'    <select id="aspect_discovery_SimpleSearch_field_scope" class="ds-select-field form-control" name="scope" ng-model="primaryQuery[0].scope" ng-init="primaryQuery[0].scope = primaryQuery[0].scope||scopeList[0].id" ng-options="sco.id as sco.label for sco in scopeList">'
+      +'    <select id="aspect_discovery_SimpleSearch_field_scope" class="ds-select-field form-control" name="scope" ng-model="primaryQuery[0].scope" ng-init="primaryQuery[0].scope = primaryQuery[0].scope||scopeList[0].id">'
+      +'        <option ng-repeat="sco in scopeList" value="{{sco.id}}" ng-selected="primaryQuery[0].scope== sco.id">{{sco.label}}</option>'
       +'    </select>'
       +'</p>'
       +'</div>'
