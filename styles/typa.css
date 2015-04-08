@@ -42,8 +42,8 @@
 .typa-item.active,
 .typa-item:active,
 .typa-item:hover {
-    background-color: #fafafa 
-/*    background-color: magenta */
+/*    background-color: #fafafa */
+    background-color: magenta
 }
 
 .typa-item-selected,

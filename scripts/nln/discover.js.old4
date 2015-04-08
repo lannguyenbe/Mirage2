@@ -29,7 +29,7 @@ app.controller('SearchBoxController', ['$scope', '$rootScope', '$window', 'focus
 function($scope, $rootScope, $window, focus, Authors, Series) {
 
 
-   /* Primary search : free text query and community scope */
+   /* Primary search */
     $scope.primaryQuery = $window.DSpace.discovery.query;
     if (typeof $window.DSpace.discovery !== 'undefined') {
       if ($scope.primaryQuery.length == 0) {
@@ -41,7 +41,7 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
     }
     $scope.scopeList = $window.DSpace.i18n.discovery.scope;
 
-   /* Filters */
+   /* Filter */
     $scope.filters = $window.DSpace.discovery.filters;
     backupOriginalFilters();
     if (typeof $window.DSpace.discovery !== 'undefined') { // start index at 1
@@ -101,20 +101,19 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
     }
 
     function backupOriginalFilters() {
-        $scope.orig_filters = angular.copy($scope.filters);
+        $window.DSpace.discovery.orig_filters = $window.DSpace.discovery.filters.slice(0);
     }
 
     $scope.restoreOriginalFilters = function() {
-        angular.copy($scope.orig_filters, $scope.filters);
+        $scope.filters = $window.DSpace.discovery.orig_filters.slice(0);
         if ($scope.filters.length == 0) { addNewFilter(0); }
 
     }
 
 
-   /* Typa */
-    $scope.my = {
-      selected:"one"
-    };
+
+    /* Typa */
+    $scope.authors_selected = [];
 
     $scope.getAuthors = function (pattern, success, error) {
       return(Authors.query({pt: pattern}, success, error));
@@ -125,88 +124,6 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
     }
 
 }]);
-
-//
-// Directives to move the input field corresponding with the resource on top
-app.directive('typaInputCtrl', function() {
-  return {
-    controller: function($scope) {
-      $scope.enableInput = function (filterType) {
-         $scope.$broadcast('filterType', filterType);
-      }
-    }
-  };
-});
-
-
-app.directive('typaInputAuthor', function() {
-  return {
-    controller: function($scope, $element) {
-      function init() {
-         enableInput({}, $scope.fil.type);
-      }
-
-      function enableInput(ev, ft) {
-         if (ft == 'author') { 
-            // enable
-            $element.removeAttr('disabled').show('fast');
-         } else {
-            $element.attr('disabled','true').hide('normal');
-         }
-      }
-
-      $scope.$on('filterType', enableInput);
-      init();
-    } //controller
-  };
-});
-
-
-app.directive('typaInputTitleSerie', function() {
-  return {
-    controller: function($scope, $element) {
-      function init() {
-         enableInput({}, $scope.fil.type);
-      }
-
-      function enableInput(ev, ft) {
-         if (ft == 'titlecom') { 
-            // enable
-            $element.removeAttr('disabled').show('fast');
-         } else {
-            $element.attr('disabled','true').hide('normal');
-         }
-      }
-
-      $scope.$on('filterType', enableInput);
-      init();
-    } //controller
-  };
-});
-
-
-app.directive('typaInputNone', function() {
-  return {
-    controller: function($scope, $element) {
-      function init() {
-         enableInput({}, $scope.fil.type);
-      }
-
-      function enableInput(ev, ft) {
-         if (ft != 'author' && ft != 'titlecom') { 
-            // enable
-            $element.removeAttr('disabled').show('fast');
-         } else {
-            $element.attr('disabled','true').hide('normal');
-         }
-      }
-
-      $scope.$on('filterType', enableInput);
-      init();
-    } //controller
-  };
-});
-
 
 angular.module('template/handlebars/hidden_primary_query.html',[])
 .run(['$templateCache', function ($templateCache) {
@@ -258,15 +175,12 @@ angular.module('template/handlebars/hbs_simple_filters.html',[])
 angular.module('template/handlebars/hbs_advanced_filters.html', [])
 .run(['$templateCache', function ($templateCache) {
    $templateCache.put('template/handlebars/hbs_advanced_filters.html',
-       '<div typa-input-ctrl ng-repeat="fil in filters" id="aspect_discovery_SimpleSearch_row_filter-new-{{$index}}"'
-      +'     ng-model="fil.selected"'
+       '<div ng-repeat="fil in filters" id="aspect_discovery_SimpleSearch_row_filter-new-{{$index}}"'
       +'     class="ds-form-item row advanced-filter-row search-filter">'
-      +'{{my.selected}}'
       +'    <div class="col-xs-4 col-sm-2">'
       +'        <p>'
       +'            <select id="aspect_discovery_SimpleSearch_field_filtertype_{{$index}}" class="ds-select-field form-control"'
-      +'                    name="filtertype_{{$index}}" ng-model="fil.type" ng-init="fil.type = fil.type||filterTypesKeys[0]"'
-      +'                    ng-change="enableInput(fil.type)">'
+      +'                    name="filtertype_{{$index}}" ng-model="fil.type" ng-init="fil.type = fil.type||filterTypesKeys[0]">'
       +'                <option ng-repeat="ft in filterTypes" value="{{filterTypesKeys[$index]}}" ng-selected="fil.type==filterTypesKeys[$index]">{{filterTypes[filterTypesKeys[$index]]}}</option>'
       +'            </select>'
       +'        </p>'
@@ -282,21 +196,10 @@ angular.module('template/handlebars/hbs_advanced_filters.html', [])
       +'    <div class="col-xs-4 col-sm-6">'
       +'        <p>'
       +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
-      +'                   typa-input-none'
+/*+'                   ng-model="author_filter_{{$index}}" nln-typahead nln-typa-resource="getAuthors" nln-typa-not-filter="true" nln-typa-selected="filter_{{$index}}"'*/
+      +'                   nln-typahead nln-typa-resource="getAuthors" nln-typa-not-filter="true" nln-typa-selected="authors_selected"'
       +'                   class="ds-text-field form-control discovery-filter-input discovery-filter-input"'
       +'                   name="filter_{{$index}}" type="text" ng-model="fil.query">'
-      +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
-      /*+'                   typa-input-author autocomplete="off" nln-typahead nln-typa-resource="getAuthors" nln-typa-not-filter="true" nln-typa-selected="authors_selected"'*/
-      +'                   typa-input-author autocomplete="off" nln-typahead nln-typa-resource="getAuthors" nln-typa-not-filter="true" nln-typa-selected="fil.selected"'
-      +'                   class="ds-text-field form-control discovery-filter-input discovery-filter-input"'
-      +'                   name="filter_{{$index}}" type="text" ng-model="fil.query">'
-      +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
-      /*+'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-selected="series_selected"'*/
-      +'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-selected="fil.selected"'
-      +'                   class="ds-text-field form-control discovery-filter-input discovery-filter-input"'
-      +'                   name="filter_{{$index}}" type="text" ng-model="fil.query">'
-/* TODO to remove */      
-      +'{{fil.selected}}'
       +'        </p>'
       +'    </div>'
       +'    <div class="hidden-xs col-sm-2">'
