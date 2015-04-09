@@ -33,15 +33,15 @@
           // setter for input field
           var ngModelGetter = $parse(attrs.ngModel); // is a function
           var ngModelSetter = ngModelGetter.assign; // is a function
-          // getter/setter for the output container where selected values will be returned
+          // setter for output container where selected values will be returned
           if (attrs.nlnTypaSelected) { // suppose to be init in parent as an (empty) array
-            var containerGetter = $parse(attrs.nlnTypaSelected);
-            var containerSetter = containerGetter.assign; // not use
+            var selectedSetter = $parse(attrs.nlnTypaSelected).assign; // not use
             originalScope._nlnTypa_selected = $parse(attrs.nlnTypaSelected)(originalScope);
           }
           // getter for call back function
           if (attrs.nlnTypaCallback) {
             var callbackGetter = $parse(attrs.nlnTypaCallback);
+            originalScope._nlnTypa_callback = callbackGetter(originalScope);
           }
 
           // internal variables & local functions
@@ -87,11 +87,8 @@
             if (selectedList.indexOf(scope.hitsList[idx][scope.label]) < 0) { 
               // if not already selected
               selectedList.push(scope.hitsList[idx][scope.label]);
-/*              if (originalScope._nlnTypa_selected) {
+              if (originalScope._nlnTypa_selected) {
                 originalScope._nlnTypa_selected.push(scope.hitsList[idx][scope.label]);
-              } */
-              if (scope.container) {
-                scope.container.push(scope.hitsList[idx][scope.label]);
               }
               return true;
             }
@@ -106,8 +103,8 @@
 
           function selectAdd(idx) {
             if (pushSelected(idx)) {
-                if (scope.callback) {
-                  scope.callback(originalScope.$index, scope.hitsList[idx][scope.label]);
+                if (originalScope._nlnTypa_callback) {
+                  originalScope._nlnTypa_callback(originalScope.$index, scope.hitsList[idx][scope.label]);
                 }
             }
           }
@@ -271,7 +268,7 @@
           scope.selectAll = function (ev) {
             var len = (scope.filterResults) ? scope.filterResults.length : scope.hitsList.length;
             if (len > 0) {
-                for (var i = 0; i < len-1; i++) { selectAdd(i); }
+                for (var i = 0; i > len-1; i++) { selectAdd(i); }
                 activeIdx = len-1;
                 select(activeIdx);
 
@@ -280,9 +277,6 @@
                 $timeout(function() { element[0].focus(); }, 0, false);
             }
           }
-
-          if (callbackGetter) { scope.callback = callbackGetter(originalScope); }
-          if (containerGetter) { scope.container = containerGetter(originalScope); }
 
 
           // Create popup element

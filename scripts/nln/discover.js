@@ -21,7 +21,8 @@ app.factory('Authors', ['$rootScope', '$resource', function($rootScope, $resourc
 //  return $resource($rootScope.endPoint + $rootScope.resources.authors);
 }]);    
 app.factory('Series', ['$rootScope', '$resource', function($rootScope, $resource) {
-  return $resource($rootScope.endPoint + $rootScope.resources.series);
+      return resource = $resource($rootScope.resources.authorsJ);
+//  return $resource($rootScope.endPoint + $rootScope.resources.series);
 }]);    
 //
 // Controller
@@ -89,6 +90,8 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
       }
     }
 
+    $scope.addNewFilter = addNewFilter;
+
     $scope.removeFilter = removeFilterAtIndex;
 
     $scope.removeFilterAtLabel = function (idx) {
@@ -112,10 +115,6 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
 
 
    /* Typa */
-   $scope.mytest = function() {
-console.log("mytest");
-   }
-
     $scope.getAuthors = function (pattern, success, error) {
       return(Authors.query({pt: pattern}, success, error));
     };
@@ -155,6 +154,10 @@ app.directive('typaInputAuthor', function() {
          }
       }
 
+      $scope.onSelectAuthor = function(idx, selVal) {
+         $scope.addNewFilter(idx, 'author', 'equals' , selVal);
+      }
+
       $scope.$on('filterType', enableInput);
       init();
     } //controller
@@ -176,6 +179,10 @@ app.directive('typaInputTitleSerie', function() {
          } else {
             $element.attr('disabled','true').hide('normal');
          }
+      }
+
+      $scope.onSelectTitleSerie = function(idx, selVal) {
+         $scope.addNewFilter(idx, 'titlecom', 'equals' , selVal);
       }
 
       $scope.$on('filterType', enableInput);
@@ -278,23 +285,24 @@ angular.module('template/handlebars/hbs_advanced_filters.html', [])
       +'        </p>'
       +'    </div>'
       +'    <div class="col-xs-4 col-sm-6">'
-      +'        <p ng-init="fil.selected = []">'
+/*      +'        <p ng-init="fil.selected = []">'*/
+      +'        <p>'
       +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
       +'                   typa-input-none'
       +'                   class="ds-text-field form-control discovery-filter-input discovery-filter-input"'
       +'                   name="filter_{{$index}}" type="text" ng-model="fil.query">'
       +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
-      /*+'                   typa-input-author autocomplete="off" nln-typahead nln-typa-resource="getAuthors" nln-typa-not-filter="true" nln-typa-selected="authors_selected"'*/
-      +'                   typa-input-author autocomplete="off" nln-typahead nln-typa-resource="getAuthors" nln-typa-not-filter="true" nln-typa-selected="fil.selected"'
+/*      +'                   typa-input-author autocomplete="off" nln-typahead nln-typa-resource="getAuthors" nln-typa-not-filter="true" nln-typa-selected="fil.selected" nln-typa-callback="onSelectAuthor"'*/
+      +'                   typa-input-author autocomplete="off" nln-typahead nln-typa-resource="getAuthors" nln-typa-not-filter="true" nln-typa-callback="onSelectAuthor"'
       +'                   class="ds-text-field form-control discovery-filter-input discovery-filter-input"'
       +'                   name="filter_{{$index}}" type="text" ng-model="fil.query">'
       +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
-      /*+'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-selected="series_selected"'*/
-      +'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-selected="fil.selected" nln-typa-callback="mytest"'
+/*      +'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-selected="fil.selected" nln-typa-callback="onSelectTitleSerie"'*/
+      +'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-callback="onSelectTitleSerie"'
       +'                   class="ds-text-field form-control discovery-filter-input discovery-filter-input"'
       +'                   name="filter_{{$index}}" type="text" ng-model="fil.query">'
 /* TODO to remove */      
-      +'{{fil.selected}}'
+/*      +'{{fil.selected}}'*/
       +'        </p>'
       +'    </div>'
       +'    <div class="hidden-xs col-sm-2">'
