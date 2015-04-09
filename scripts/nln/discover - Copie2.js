@@ -278,6 +278,7 @@ angular.module('template/handlebars/hbs_advanced_filters.html', [])
       +'        </p>'
       +'    </div>'
       +'    <div class="col-xs-4 col-sm-6">'
+/*      +'        <p ng-model="fil.selected" ng-init="fil.selected = []">'*/
       +'        <p ng-init="fil.selected = []">'
       +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
       +'                   typa-input-none'

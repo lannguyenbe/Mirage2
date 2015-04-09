@@ -90,6 +90,7 @@
             for (var i = 0; i < nbr; i++, idx++) {
               if (selectedList.indexOf(scope.hitsList[idx][scope.label]) >= 0) { continue; }
               selectedList.push(scope.hitsList[idx][scope.label]);          
+              if (selectedSetter) { selectedSetter(originalScope, selectedList); }
             }
           }
 

@@ -34,14 +34,14 @@
           var ngModelGetter = $parse(attrs.ngModel); // is a function
           var ngModelSetter = ngModelGetter.assign; // is a function
           // setter for output container where selected values will be returned
-          if (attrs.nlnTypaSelected) { // suppose to be init in parent as an (empty) array
-            var selectedSetter = $parse(attrs.nlnTypaSelected).assign; // not use
+          if (attrs.nlnTypaSelected) {
+            var selectedSetter = $parse(attrs.nlnTypaSelected).assign;
             originalScope._nlnTypa_selected = $parse(attrs.nlnTypaSelected)(originalScope);
           }
           // getter for call back function
           if (attrs.nlnTypaCallback) {
             var callbackGetter = $parse(attrs.nlnTypaCallback);
-            originalScope._nlnTypa_callback = callbackGetter(originalScope);
+            originalScope._ntnTypa_callback = callbackGetter(originalScope);
           }
 
           // internal variables & local functions
@@ -50,7 +50,7 @@
           var forceClose;
           var activeIdx;
 
-          var selectedList = []; // local list of selected items for debugging purpose
+          var selectedList = []; // local list of selected items
 
           // initialize keydown event handlers
           var keys = [];
@@ -68,17 +68,13 @@
 
           function isPopupOpen() {
             if (forceClose) { // popup is hidden 
-console.debug('debug 10:'+forceClose);            
               forceClose = false;
               return false;
             } else if ((scope.hitsList||[]).length) { // popup is already open
-console.debug('debug 20');            
               return true;
             } else if (ngModelCtrl.$viewValue) { // popup is not populated
-console.debug('debug 30');            
               getHits(ngModelCtrl.$viewValue);
             }
-console.debug('debug 40');            
             return false;
           }
 
@@ -86,29 +82,25 @@ console.debug('debug 40');
             var modulo = (scope.filterResults) ? scope.filterResults.length : scope.hitsList.length;
             activeIdx = (activeIdx+modulo+n)%modulo;
           }
-          
-          function pushSelected(idx) {
-            if (selectedList.indexOf(scope.hitsList[idx][scope.label]) < 0) { //not already present
-              selectedList.push(scope.hitsList[idx][scope.label]);
-              if (originalScope._nlnTypa_selected) {
-                originalScope._nlnTypa_selected.push(scope.hitsList[idx][scope.label]);
-              }
-              return true;
-            }
-            return false;
-          }
 
-          function select(idx) {
-            pushSelected(idx);
+          function select(idx, n) {
+            var nbr = n || 1;
+            selectAdd(idx, nbr);
             ngModelSetter(originalScope, scope.hitsList[idx][scope.label]);
             forceClose = true; // hide               	
           }
 
-          function selectAdd(idx) {
-            if (pushSelected(idx)) {
-                if (originalScope._nlnTypa_callback) {
-                  originalScope._nlnTypa_callback();
-                }
+          function selectAdd(idx, n) {
+            var nbr = n || 1;
+            for (var i = 0; i < nbr; i++, idx++) {
+              if (selectedList.indexOf(scope.hitsList[idx][scope.label]) >= 0) { continue; }
+              selectedList.push(scope.hitsList[idx][scope.label]);
+              if (originalScope._nlnTypa_selected) {
+                originalScope._nlnTypa_selected.push(scope.hitsList[idx][scope.label]);
+              }
+              if (originalScope._nlnTypa_callback) {
+                originalScope._nlnTypa_callback();
+              }
             }
           }
 
@@ -124,7 +116,6 @@ console.debug('debug 40');
 
             keys.forEach(function(o) {
               if (o.keyName !== key) {return;}
-              hasFocus = true;
               o.handle();
               scope.$apply(); // trigger all listeners to propagate changes
             });
@@ -137,8 +128,8 @@ console.debug('debug 40');
           // Keep reference to click handler to unbind it.
           var dismissClickHandler = function (ev) {
             if (element[0] !== ev.target) {
-              if (forceClose === false) { forceClose = true; }
-              scope.$digest();
+              forceClose = true;
+              // scope.$digest();
             }
           };
 
@@ -192,7 +183,7 @@ console.debug('debug 40');
           function getHitsAsyncNotFilter(pattern) {
             resetHitsList();
             scope.hitsList = resource(pattern, function (d) { // on success
-            if (hasFocus && d.length) {
+               if (hasFocus && d.length) {
                  scope.label = Object.keys(d[0])[0]; // first property
                  activeIdx = 0;
                }
@@ -227,8 +218,6 @@ console.debug('debug 40');
               cancelPreviousTimeout();
               resetHitsList();
             }
-            return inputValue;
-            
           });
 
 
@@ -269,16 +258,13 @@ console.debug('debug 40');
           }
 
           scope.selectAll = function (ev) {
-            var len = (scope.filterResults) ? scope.filterResults.length : scope.hitsList.length;
-            if (len > 0) {
-                for (var i = len-1; i > 0; i--) { selectAdd(i); }
-                activeIdx = 0;
-                select(activeIdx);
+            var all = (scope.filterResults) ? scope.filterResults.length : scope.hitsList.length;
+            selectAdd(0, all);
+            select(activeIdx);
 
-                // return focus to the input element if a match was selected via a mouse click event
-                // use timeout to avoid $rootScope:inprog error
-                $timeout(function() { element[0].focus(); }, 0, false);
-            }
+            // return focus to the input element if a match was selected via a mouse click event
+            // use timeout to avoid $rootScope:inprog error
+            $timeout(function() { element[0].focus(); }, 0, false);
           }
 
 

@@ -112,9 +112,9 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
 
 
    /* Typa */
-   $scope.mytest = function() {
-console.log("mytest");
-   }
+    $scope.my = {
+      selected:"one"
+    };
 
     $scope.getAuthors = function (pattern, success, error) {
       return(Authors.query({pt: pattern}, success, error));
@@ -259,7 +259,9 @@ angular.module('template/handlebars/hbs_advanced_filters.html', [])
 .run(['$templateCache', function ($templateCache) {
    $templateCache.put('template/handlebars/hbs_advanced_filters.html',
        '<div typa-input-ctrl ng-repeat="fil in filters" id="aspect_discovery_SimpleSearch_row_filter-new-{{$index}}"'
+      +'     ng-model="fil.selected"'
       +'     class="ds-form-item row advanced-filter-row search-filter">'
+      +'{{my.selected}}'
       +'    <div class="col-xs-4 col-sm-2">'
       +'        <p>'
       +'            <select id="aspect_discovery_SimpleSearch_field_filtertype_{{$index}}" class="ds-select-field form-control"'
@@ -278,7 +280,7 @@ angular.module('template/handlebars/hbs_advanced_filters.html', [])
       +'        </p>'
       +'    </div>'
       +'    <div class="col-xs-4 col-sm-6">'
-      +'        <p ng-init="fil.selected = []">'
+      +'        <p>'
       +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
       +'                   typa-input-none'
       +'                   class="ds-text-field form-control discovery-filter-input discovery-filter-input"'
@@ -290,7 +292,7 @@ angular.module('template/handlebars/hbs_advanced_filters.html', [])
       +'                   name="filter_{{$index}}" type="text" ng-model="fil.query">'
       +'            <input id="aspect_discovery_SimpleSearch_field_filter_{{$index}}"'
       /*+'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-selected="series_selected"'*/
-      +'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-selected="fil.selected" nln-typa-callback="mytest"'
+      +'                   typa-input-title-serie autocomplete="off" nln-typahead nln-typa-resource="getSeries" nln-typa-not-filter="true" nln-typa-selected="fil.selected"'
       +'                   class="ds-text-field form-control discovery-filter-input discovery-filter-input"'
       +'                   name="filter_{{$index}}" type="text" ng-model="fil.query">'
 /* TODO to remove */      
