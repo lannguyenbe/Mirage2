@@ -97,7 +97,7 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
     $scope.removeFilterAtLabel = function (idx) {
         removeFilterAtIndex(idx); 
         // then submit the form
-        $scope.formCommit();
+        $scope.forms.general_query.commit();
     }
 
 
@@ -133,7 +133,7 @@ app.directive("ngFormCommit", [function(){
     return {
         require:"form",
         link: function(scope, el, attrs, form) {
-            scope.formCommit = function() {
+            form.commit = function() {
                scope.$apply();
                el[0].submit.click();
             };

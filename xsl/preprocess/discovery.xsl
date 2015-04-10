@@ -32,15 +32,23 @@
 
     <xsl:output indent="yes"/>
   
-    <!-- Lan 04.04.2015 add angular controller for search box -->
+    <!-- Lan 04.04.2015 add ng-controller as attribute -->
     <xsl:template match="dri:div[@id='aspect.discovery.SimpleSearch.div.discovery-search-box']">
         <div>
             <xsl:call-template name="copy-attributes"/>
             <xsl:attribute name="ng-controller">
                <xsl:text>SearchBoxController</xsl:text>
             </xsl:attribute>
-            <xsl:attribute name="ng-controller">
-               <xsl:text>SearchBoxController</xsl:text>
+            <xsl:apply-templates/>
+        </div>
+    </xsl:template>
+
+    <!-- Lan 10.04.2015 add ng-form-commit as attribute -->
+    <xsl:template match="dri:div[@id='aspect.discovery.SimpleSearch.div.general-query']">
+        <div>
+            <xsl:call-template name="copy-attributes"/>
+            <xsl:attribute name="ng-form-commit">
+               <!--xsl:text></xsl:text-->
             </xsl:attribute>
             <xsl:apply-templates/>
         </div>
