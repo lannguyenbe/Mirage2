@@ -10,8 +10,7 @@
        ,templateUrl: 'template/typeahead/typa-container.html'
       }
     })
-    .directive('nlnTypahead', 
-    function ($compile, $timeout, $filter, $parse, $document) {
+    .directive('nlnTypahead', function ($compile, $timeout, $filter, $parse, $document) {
       return {
         restrict: 'A'
        ,require:'ngModel'
@@ -309,23 +308,6 @@
     angular.module('template/typeahead/typa-container.html',[])
     .run(['$templateCache', function($templateCache) {
       $templateCache.put('template/typeahead/typa-container.html',
-        '<ul class="dropdown-menu" ng-show="!isEmpty() && !isForceClose()" style="display: block; top: inherit; left: inherit;">\n'+
-        '  <li ng-repeat="item in hitsList | limitTo:7 as filterResults" ng-click="selectActive($event)"\n'+
-        '    ng-class="{active: isActive($index)}"\n'+
-        '    ng-mouseenter="setActive($index)">\n'+
-        '    <a>{{item[label]}}<a>\n'+
-        '  </li>\n'+
-        '  <li>\n'+
-        '    <button ng-if="filterResults.length > 1" ng-click="selectAll($event)" type="button">Simone, prends les tous !</button>\n'+
-        '  </li>\n'+
-        '</ul>\n'+
-        '');
-    }]);
-
-// The following template needs typa.css
-    angular.module('template/typeahead/typa-container-1.html',[])
-    .run(['$templateCache', function($templateCache) {
-      $templateCache.put('template/typeahead/typa-container-1.html',
         '<div class="typa-container" ng-show="!isEmpty() && !isForceClose()" style="width: 234px;">\n'+
         '  <div class="typa-item" ng-repeat="item in hitsList | limitTo:7 as filterResults" ng-click="selectActive($event)"\n'+
         '    ng-class="{\'active\': isActive($index)}"\n'+
@@ -334,7 +316,7 @@
         '    <span class="typa-item-query">{{item[label]}}</span>\n'+
         '  </div>\n'+
         '  <div>\n'+
-        '    <button ng-if="filterResults.length > 1" ng-click="selectAll($event)" type="button">Simone, prends les tous !</button>\n'+
+        '    <button ng-if="filterResults.length > 1" ng-click="selectAll($event)" type="button">Simone, envoie tout !</button>\n'+
         '  </div>\n'+
         '</div>\n'+
         '');

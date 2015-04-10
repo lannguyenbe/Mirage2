@@ -17,12 +17,12 @@ app.run(['$rootScope', function($rootScope) {
 //
 // Factories   
 app.factory('Authors', ['$rootScope', '$resource', function($rootScope, $resource) {
-      return resource = $resource($rootScope.resources.authorsJ);
-//  return $resource($rootScope.endPoint + $rootScope.resources.authors);
+//      return resource = $resource($rootScope.resources.authorsJ);
+  return $resource($rootScope.endPoint + $rootScope.resources.authors);
 }]);    
 app.factory('Series', ['$rootScope', '$resource', function($rootScope, $resource) {
-      return resource = $resource($rootScope.resources.authorsJ);
-//  return $resource($rootScope.endPoint + $rootScope.resources.series);
+//      return resource = $resource($rootScope.resources.authorsJ);
+  return $resource($rootScope.endPoint + $rootScope.resources.series);
 }]);    
 //
 // Controller
@@ -95,7 +95,8 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
     $scope.removeFilter = removeFilterAtIndex;
 
     $scope.removeFilterAtLabel = function (idx) {
-        removeFilterAtIndex(idx);
+        removeFilterAtIndex(idx);        
+$scope.forms.general_query.commit();
     }
 
 
@@ -124,6 +125,24 @@ function($scope, $rootScope, $window, focus, Authors, Series) {
     }
 
 }]);
+
+app.directive("ngFormCommit", [function(){
+    return {
+        require:"form",
+        link: function(scope, el, attrs, form) {
+            form.commit = function() {
+console.log("debug 100");
+console.log("debug 110"+angular.element(el[0]).action); // undefined
+console.log("debug 120"+el[0].action);
+console.log("debug 120"+el[0].method);
+console.log("debug 120"+el[0].submit);
+document.forms.general_query.submit();
+            
+//                angular.element(el[0]).submit();//do nothing
+            };
+        }
+    };
+}])
 
 //
 // Directives to move the input field corresponding with the resource on top
