@@ -486,6 +486,22 @@
                 <td><xsl:value-of select="./@language"/></td>
             </tr>
     </xsl:template>
+    
+    <!-- Lan 14.04.2015 -->
+     <xsl:template name="item_expanded" match="dri:div[@n= 'item-expanded']/dri:list">
+        <div class="simple-item-view-item-expanded item-page-field-wrapper table">
+           <h5><i18n:text>xmlui.mirage2.itemSummaryView.itemExpanded</i18n:text></h5>
+           <xsl:for-each select="dri:list">
+              <div>
+                 <xsl:apply-templates select="dri:item[1]"/>
+                 <span><xsl:text>, </xsl:text><xsl:value-of select="dri:item[2]"/>
+                 <span class="publisher-date h4"><small><xsl:text> </xsl:text>
+                 (<i18n:text><xsl:value-of select="dri:item[3]"/></i18n:text>)</small></span>
+                 </span>
+              </div>
+           </xsl:for-each>
+        </div>
+     </xsl:template>
 
     <!-- don't render the item-view-toggle automatically in the summary view, only when it gets called -->
     <xsl:template match="dri:p[contains(@rend , 'item-view-toggle') and
